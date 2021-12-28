@@ -6,6 +6,7 @@ import {
   Input,
   ViewChild,
 } from '@angular/core';
+import { Texture, DoubleSide, Side } from 'three';
 
 @Component({
   selector: 'ngt-minecraft-geometry',
@@ -13,12 +14,9 @@ import {
     <ngt-mesh>
       <ngt-plane-geometry #plane="ngtPlaneGeometry" [args]="[100, 100]">
       </ngt-plane-geometry>
-      <ngt-mesh-basic-material
-        [parameters]="{ color: 'green' }"
-      ></ngt-mesh-basic-material>
-      <!--<ngt-mesh-lambert-material
-        [args]="{ map: texture, side: THREE.DoubleSide }"
-      ></ngt-mesh-lambert-material>-->
+      <ngt-mesh-lambert-material
+        [parameters]="{ map: texture, side: doubleSide }"
+      ></ngt-mesh-lambert-material>
     </ngt-mesh>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,8 +24,11 @@ import {
 export class MinecraftGeometryComponent implements AfterViewInit {
   @Input() matrix!: THREE.Matrix4;
   @Input() side!: 'px' | 'py' | 'pz' | 'nx' | 'nz';
+  @Input() texture!: Texture;
 
   @ViewChild('plane') plane!: NgtPlaneGeometry;
+
+  public doubleSide: Side = DoubleSide;
 
   ngAfterViewInit() {
     this.plane.geometry.applyMatrix4(this.matrix);
