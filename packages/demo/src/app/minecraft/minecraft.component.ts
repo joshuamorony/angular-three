@@ -13,8 +13,8 @@ import {
 } from '@angular-three/core/materials';
 import { NgtMeshModule } from '@angular-three/core/meshes';
 import {
-  NgtSobaFlyControls,
-  NgtSobaFlyControlsModule,
+  NgtSobaFirstPersonControls,
+  NgtSobaFirstPersonControlsModule,
 } from '@angular-three/soba/controls';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, NgModule } from '@angular/core';
@@ -26,10 +26,10 @@ import { ImprovedNoise } from './utils/ImprovedNoise';
   selector: 'ngt-minecraft',
   template: `
     <ngt-canvas [camera]="{ fov: 60 }">
-      <ngt-soba-fly-controls
-        #flyControls="ngtSobaFlyControls"
-        (ready)="onReady(flyControls)"
-      ></ngt-soba-fly-controls>
+      <ngt-soba-first-person-controls
+        #firstPersonControls="ngtSobaFirstPersonControls"
+        (ready)="onReady(firstPersonControls)"
+      ></ngt-soba-first-person-controls>
 
       <ngt-minecraft-geometry
         *ngFor="let geometry of geometries"
@@ -110,9 +110,10 @@ export class MinecraftComponent implements AfterViewInit {
     }
   }
 
-  onReady(flyControls: NgtSobaFlyControls) {
-    flyControls.controls.movementSpeed = 1000;
-    flyControls.controls.rollSpeed = Math.PI / 10;
+  onReady(firstPersonControls: NgtSobaFirstPersonControls) {
+    firstPersonControls.controls.movementSpeed = 1000;
+    firstPersonControls.controls.lookSpeed = 0.125;
+    firstPersonControls.controls.lookVertical = true;
   }
 
   #generateHeight(width: number, height: number) {
@@ -150,7 +151,7 @@ export class MinecraftComponent implements AfterViewInit {
     NgtShadowMaterialModule,
     NgtMeshNormalMaterialModule,
     NgtMeshLambertMaterialModule,
-    NgtSobaFlyControlsModule,
+    NgtSobaFirstPersonControlsModule,
     NgtHemisphereLightModule,
     NgtDirectionalLightModule,
     CommonModule,
