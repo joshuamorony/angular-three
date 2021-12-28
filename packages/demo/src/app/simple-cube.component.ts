@@ -1,4 +1,8 @@
-import { NgtCoreModule } from '@angular-three/core';
+import {
+  NgtColorPipeModule,
+  NgtCoreModule,
+  NgtCursorModule,
+} from '@angular-three/core';
 import { NgtBoxGeometryModule } from '@angular-three/core/geometries';
 import {
   NgtBoxHelperModule,
@@ -24,11 +28,11 @@ import * as THREE from 'three';
 @Component({
   selector: 'ngt-simple-cube',
   template: `
-    <ngt-canvas [scene]="{ background: 'black' | color }">
+    <ngt-canvas [camera]="{ position: [0, 2, 5] }">
       <ngt-stats></ngt-stats>
       <ngt-ambient-light></ngt-ambient-light>
       <ngt-spot-light
-        ngtSpotLightHelper
+        [ngtSpotLightHelper]="['black']"
         [position]="[1, 1, 1]"
       ></ngt-spot-light>
       <ngt-cube></ngt-cube>
@@ -44,11 +48,14 @@ export class SimpleCubeComponent {}
   template: `
     <ngt-soba-box
       #sobaBox
-      ngtBoxHelper
+      ngtCursor
+      [ngtBoxHelper]="['black']"
       (animateReady)="onAnimateReady(sobaBox.object)"
+      (click)="active = !active"
       (pointerover)="hover = true"
       (pointerout)="hover = false"
       [isMaterialArray]="true"
+      [scale]="active ? [1.5, 1.5, 1.5] : [1, 1, 1]"
     >
       <ngt-cube-materials [hover]="hover"></ngt-cube-materials>
     </ngt-soba-box>
@@ -57,6 +64,7 @@ export class SimpleCubeComponent {}
 })
 export class CubeComponent {
   hover = false;
+  active = false;
 
   onAnimateReady(mesh: THREE.Mesh) {
     mesh.rotation.x = -Math.PI / 2;
@@ -107,6 +115,8 @@ export class CubeMaterials {
     NgtSobaBoxModule,
     NgtBoxHelperModule,
     NgtSpotLightHelperModule,
+    NgtCursorModule,
+    NgtColorPipeModule,
   ],
 })
 export class SimpleCubeComponentModule {}

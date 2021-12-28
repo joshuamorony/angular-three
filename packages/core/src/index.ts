@@ -5,6 +5,7 @@ export * from './lib/core.module';
 export * from './lib/di/object3d';
 export * from './lib/di/performance';
 export * from './lib/di/resize';
+export * from './lib/di/canvas';
 
 export * from './lib/canvas.component';
 
@@ -14,6 +15,7 @@ export * from './lib/pipes/math.pipe';
 export * from './lib/pipes/fog.pipe';
 
 export * from './lib/directives/repeat.directive';
+export * from './lib/directives/cursor.directive';
 
 export * from './lib/controllers/controller';
 export * from './lib/controllers/object-3d.controller';

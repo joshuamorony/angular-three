@@ -1,4 +1,11 @@
-import { makeVector3, NgtCoreModule } from '@angular-three/core';
+import {
+  makeVector3,
+  NGT_CANVAS_OPTIONS,
+  NgtCoreModule,
+  NgtCursorModule,
+  NgtMathPipeModule,
+  provideCanvasOptions,
+} from '@angular-three/core';
 import { NgtBoxGeometryModule } from '@angular-three/core/geometries';
 import { NgtGroupModule } from '@angular-three/core/group';
 import { NgtGridHelperModule } from '@angular-three/core/helpers';
@@ -14,11 +21,10 @@ import { NgtMeshModule } from '@angular-three/core/meshes';
 import { NgtStatsModule } from '@angular-three/core/stats';
 import { NgtSobaTextModule } from '@angular-three/soba/abstractions';
 import { NgtSobaOrbitControlsModule } from '@angular-three/soba/controls';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Inject,
   NgModule,
   NgZone,
 } from '@angular/core';
@@ -28,6 +34,7 @@ import { gsap } from 'gsap';
 import niceColors from 'nice-color-palettes';
 import { Mesh, Vector3 } from 'three';
 import { OrbitControls } from 'three-stdlib';
+import { environment } from '../../environments/environment';
 import { SimpleCubeComponentModule } from '../simple-cube.component';
 
 export interface CubeContent {
@@ -60,11 +67,10 @@ export interface CubeContent {
             {{ cubeContent.label }}
           </ngt-soba-text>
           <ngt-mesh
+            ngtCursor
             #cube="ngtMesh"
             (ready)="cubes.push(cube.mesh)"
             (click)="onCubeSelected(cubeContent, i)"
-            (pointerover)="onHover()"
-            (pointerout)="offHover()"
             [position]="[6, 0, 0]"
             [userData]="cubeContent"
           >
@@ -148,6 +154,14 @@ export interface CubeContent {
       }
     `,
   ],
+  providers: [
+    {
+      provide: NGT_CANVAS_OPTIONS,
+      useValue: provideCanvasOptions({
+        projectContent: !environment.production,
+      }),
+    },
+  ],
 })
 export class OrbitControlsTargetSwitcherComponent {
   cubeContents: CubeContent[] = [
@@ -187,18 +201,7 @@ export class OrbitControlsTargetSwitcherComponent {
     return this.#selectedCube;
   }
 
-  constructor(
-    private ngZone: NgZone,
-    @Inject(DOCUMENT) private document: Document
-  ) {}
-
-  onHover() {
-    this.document.body.style.cursor = 'pointer';
-  }
-
-  offHover() {
-    this.document.body.style.cursor = 'auto';
-  }
+  constructor(private ngZone: NgZone) {}
 
   onCubeSelected(cubeContent: CubeContent | null, index: number) {
     this.#selectedCube = cubeContent;
@@ -253,6 +256,8 @@ export class OrbitControlsTargetSwitcherComponent {
     NgtMeshPhongMaterialModule,
     NgtGridHelperModule,
     NgtSobaTextModule,
+    NgtCursorModule,
+    NgtMathPipeModule,
   ],
 })
 export class OrbitControlsTargetSwitcherComponentModule {}
